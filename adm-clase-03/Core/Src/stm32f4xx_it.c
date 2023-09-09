@@ -145,6 +145,9 @@ void SVC_Handler(void)
 {
   /* USER CODE BEGIN SVCall_IRQn 0 */
 
+	// Since we are in Handler mode, we can change the CONTROL register to go back to privileged mode.
+	__set_CONTROL(0x0000);
+
   /* USER CODE END SVCall_IRQn 0 */
   /* USER CODE BEGIN SVCall_IRQn 1 */
 

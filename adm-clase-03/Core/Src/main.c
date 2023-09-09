@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "asm_func.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,6 +54,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
+
+static void svc_privileges();
 
 /* USER CODE END PFP */
 
@@ -91,6 +95,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
+
+  svc_privileges();
 
   /* USER CODE END 2 */
 
@@ -240,6 +246,37 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// Test what happens if we want to change the CONTROL register
+static void svc_privileges()
+{
+	// Read CONTROL register for the fist time. Since we are in privileged mode, it should return 0.
+	uint32_t control = __get_CONTROL();
+
+	// Set LSB to change the mode to non-privileged and update CONTROL.
+	control |= 0x01;
+	__set_CONTROL(control);
+
+	// Check that we are in non-privileged mode
+	control = __get_CONTROL();
+
+	// Clear LSB again, and see what happens...
+	control &= ~0x01;
+	__set_CONTROL(control);
+
+	control = __get_CONTROL();
+
+	// nothing will happen, since we are trying to change the mode from non-privileged to privileged.
+	// One way of addressing this is to go to Handler mode by triggering an exception, and perform the
+	// change of mode in the ISR. Let's trigger the SVC (Supervisor Call, or System service call) exception.
+	asm_svc();
+
+	// The rest of the code will be at stm32f4xx_it.c -> SVC_Handler(void)
+
+	control = __get_CONTROL();
+
+
+}
 
 /* USER CODE END 4 */
 
