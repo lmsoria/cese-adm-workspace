@@ -96,7 +96,11 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
-  svc_privileges();
+//  svc_privileges();
+
+  uint32_t vec[5];
+
+  asm_zeros(vec, 5);
 
   /* USER CODE END 2 */
 
