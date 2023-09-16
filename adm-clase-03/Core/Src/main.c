@@ -98,13 +98,15 @@ int main(void)
 
 //  svc_privileges();
 
-  uint32_t vec[5] = {0, 1, 2, 3, 4};
+  uint16_t vec[5] = {0, 1, 2, 3, 4};
 
-  uint32_t vec_out[5];
+  uint16_t vec_out[5];
 
-  asm_zeros(vec_out, 5);
+//  asm_zeros(vec_out, 5);
 
-  asm_producto_escalar32(vec, vec_out, 5, 3);
+//  asm_producto_escalar32(vec, vec_out, 5, 3);
+  asm_producto_escalar16(vec, vec_out, 5, 3);
+
 
   /* USER CODE END 2 */
 
