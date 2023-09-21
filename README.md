@@ -29,3 +29,11 @@ Finalmente, el set de instrucciones Thumb soporta ejecución condicional, permit
 Una arquitectura del tipo `load-store` se refiere a la forma en la que las instrucciones son ejecutadas. En una arquitectura `load-store`, la mayoría de operaciones aritmético-lógicas se ejecutan exclusivamente en los registros del CPU (ie `r0-r12`). Es decir, las operaciones no acceden a los datos almacenados en memoria directamente, si no que previamente deben haber sido movidos a alguno de los registros de uso general.
 
 Por ejemplo, si se desea sumar dos números, primero deben almacenarse sus valores desde la memoria a registros, luego sumar sus valores y finalmente guardar este resultado de nuevo en memoria si fuera necesario.
+
+### Cómo es el mapa de memoria de la familia?
+Dado que estamos hablando de una arquitectura de 32 bits, se pueden direccionar `2^32 - 1` direcciones (4Gib) En el caso de ARM, esta región de memoria se distribuye para
+* Memoria de programa
+* Memoria de datos
+* Periféricos, tanto propietarios como comunes (ie NVIC).
+
+![Cortex-M MemMap](Resources/cortex-m-memory-map.jpg "Mapa de memoria")
