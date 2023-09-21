@@ -313,10 +313,14 @@ static void svc_privileges()
 	asm_svc();
 
 	// The rest of the code will be at stm32f4xx_it.c -> SVC_Handler(void)
-
 	control = __get_CONTROL();
+}
 
-
+static void zeros(uint32_t* vector, uint32_t longitud)
+{
+	for(uint32_t i = 0; i < longitud; i++) {
+		vector[i] = 0;
+	}
 }
 
 /* USER CODE END 4 */
