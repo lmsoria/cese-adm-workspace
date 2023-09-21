@@ -138,6 +138,10 @@ int main(void)
 //  asm_producto_escalar32(vec, vec_out, 5, 3);
   asm_producto_escalar16(vec, vec_out, 5, 3);
 
+  int32_t vec32 = { -1, 5, 10, 3, 1, 0 };
+
+  int32_t max = max(vec32, 6);
+
 
   /* USER CODE END 2 */
 
@@ -322,6 +326,50 @@ static void zeros(uint32_t* vector, uint32_t longitud)
 		vector[i] = 0;
 	}
 }
+
+static void producto_escalar32(uint32_t* vector_in, uint32_t longitud, uint32_t escalar)
+{
+	for(uint32_t i = 0; i < longitud; i++) {
+		vector_in[i] *= escalar;
+	}
+}
+
+static void producto_escalar16(uint16_t* vector_in, uint32_t longitud, uint16_t escalar)
+{
+	for(uint32_t i = 0; i < longitud; i++) {
+		vector_in[i] *= escalar;
+	}
+}
+
+
+static void producto_escalar12(uint16_t* vector_in, uint32_t longitud, uint16_t escalar)
+{
+	for(uint32_t i = 0; i < longitud; i++) {
+		uint32_t res = (uint32_t)vector_in[i] * (uint32_t)escalar;
+		vector_in[i] = (res > 4095) ? 4095 : (uint16_t)res;
+	}
+}
+
+static void filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud_vector_in)
+{
+
+}
+
+static void pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud)
+{
+
+}
+
+static int32_t max(int32_t* vector_in, uint32_t longitud)
+{
+	int32_t max = vector_in[0];
+	for(uint32_t i = 1; i <  longitud; i++) {
+		max = (vector_in[i] > max) ? vector_in[i] : max;
+	}
+
+	return max;
+}
+
 
 /* USER CODE END 4 */
 
