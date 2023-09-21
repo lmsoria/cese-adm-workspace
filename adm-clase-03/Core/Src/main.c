@@ -57,6 +57,37 @@ static void MX_USART3_UART_Init(void);
 
 static void svc_privileges();
 
+// 1) Realizar una función que inicialice un vector con ceros.
+static void zeros(uint32_t* vector, uint32_t longitud);
+
+// 2) Realizar una función que realice el producto de un vector y un escalar (por ejemplo, podría servir
+// para cambiar el nivel de amplitud de una señal)
+static void producto_escalar32(uint32_t* vector_in, uint32_t longitud, uint32_t escalar);
+
+// 3) Adapte la función del ejercicio 2 para realizar operaciones sobre vectores de 16 bits
+static void producto_escalar16(uint16_t* vector_in, uint32_t longitud, uint16_t escalar);
+
+// 4) Adapte la función del ejercicio 3 para saturar el resultado del producto a 12 bits
+static void producto_escalar12(uint16_t* vector_in, uint32_t longitud, uint16_t escalar);
+
+// 5) Realice una función que implemente un filtro de ventana móvil de 10 valores sobre un vector de muestras
+static void filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud_vector_in);
+
+// 6) Realizar una función que reciba un vector de números signados de 32 bits y los “empaquete” en
+// otro vector de 16 bits. La función deberá adecuar los valores de entrada a la nueva precisión
+static void pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud);
+
+// 7) Realizar una función que reciba un vector de números signados de 32 bits y devuelva la posición
+// del máximo del vector.
+static int32_t max(int32_t* vector_in, uint32_t longitud);
+
+// 8) Realizar una función que reciba un vector de muestras signadas de 32 bits y lo decime
+// descartando una cada N muestras.
+static void downsample_N(int32_t* vector_in, int32_t* vector_out, uint32_t longitud, uint32_t N);
+
+// 9) Realizar una función que reciba un vector de muestras no signadas de 16 bits e invierta su orden.
+void invertir (uint16_t* vector, uint32_t longitud);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
