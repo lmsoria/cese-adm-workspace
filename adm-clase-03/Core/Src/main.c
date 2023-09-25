@@ -62,13 +62,13 @@ static void zeros(uint32_t* vector, uint32_t longitud);
 
 // 2) Realizar una función que realice el producto de un vector y un escalar (por ejemplo, podría servir
 // para cambiar el nivel de amplitud de una señal)
-static void producto_escalar32(uint32_t* vector_in, uint32_t longitud, uint32_t escalar);
+static void producto_escalar32(uint32_t* vector_in, uint32_t* vector_out, uint32_t longitud, uint32_t escalar);
 
 // 3) Adapte la función del ejercicio 2 para realizar operaciones sobre vectores de 16 bits
-static void producto_escalar16(uint16_t* vector_in, uint32_t longitud, uint16_t escalar);
+static void producto_escalar16(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud, uint16_t escalar);
 
 // 4) Adapte la función del ejercicio 3 para saturar el resultado del producto a 12 bits
-static void producto_escalar12(uint16_t* vector_in, uint32_t longitud, uint16_t escalar);
+static void producto_escalar12(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud, uint16_t escalar);
 
 // 5) Realice una función que implemente un filtro de ventana móvil de 10 valores sobre un vector de muestras
 static void filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud_vector_in);
@@ -127,21 +127,54 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
-//  svc_privileges();
+  // Línea para activar el conteo de ciclos (se debe ejecutar una sola vez)
+  DWT->CTRL |= 1 << DWT_CTRL_CYCCNTENA_Pos;
 
-  uint16_t vec[5] = {0, 1, 2, 3, 4};
+  uint32_t vec_c32[5] = {0, 1, 2, 3, 4};
+  uint32_t vec_asm32[5] = {0, 10000, 20000, 30, 40};
+  uint32_t vec_out32[5];
 
-  uint16_t vec_out[5];
+  asm_zeros(vec_out32, 5);
 
-//  asm_zeros(vec_out, 5);
+  volatile uint32_t cnt_c = 0;
+  volatile uint32_t cnt_asm = 0;
 
-//  asm_producto_escalar32(vec, vec_out, 5, 3);
-  asm_producto_escalar16(vec, vec_out, 5, 3);
+  DWT->CYCCNT = 0;
+  //funcionAMedir ();
+  producto_escalar32(vec_c32, vec_out32, 5, 3);
+  cnt_c = DWT->CYCCNT;
 
-  int32_t vec32 = { -1, 5, 10, 3, 1, 0 };
+  DWT->CYCCNT = 0;
+  //funcionAMedir ();
+  asm_producto_escalar32(vec_asm32, vec_out32, 5, 3);
+  cnt_asm = DWT->CYCCNT;
 
-  int32_t max = max(vec32, 6);
 
+  uint16_t vec_c16[5] = {0, 1, 2, 3, 4};
+  uint16_t vec_asm16[5] = {0, 1, 2, 3, 4};
+  uint16_t vec_out16[5];
+
+  DWT->CYCCNT = 0;
+  producto_escalar16(vec_c16, vec_out16, 5, 3);
+  cnt_c = DWT->CYCCNT;
+
+  DWT->CYCCNT = 0;
+  asm_producto_escalar16(vec_asm16, vec_out16, 5, 3);
+  cnt_asm = DWT->CYCCNT;
+
+
+
+  uint16_t vec_c12[5] = {0, 1000, 2000, 3000, 4000};
+  uint16_t vec_asm12[5] = {0, 1000, 2000, 3000, 4000};
+  uint16_t vec_out12[5];
+
+  DWT->CYCCNT = 0;
+  producto_escalar12(vec_c12, vec_out12, 5, 2);
+  cnt_c = DWT->CYCCNT;
+
+  DWT->CYCCNT = 0;
+  asm_producto_escalar12(vec_asm12, vec_out12, 5, 2);
+  cnt_asm = DWT->CYCCNT;
 
   /* USER CODE END 2 */
 
@@ -327,26 +360,26 @@ static void zeros(uint32_t* vector, uint32_t longitud)
 	}
 }
 
-static void producto_escalar32(uint32_t* vector_in, uint32_t longitud, uint32_t escalar)
+static void producto_escalar32(uint32_t* vector_in, uint32_t* vector_out, uint32_t longitud, uint32_t escalar)
 {
 	for(uint32_t i = 0; i < longitud; i++) {
-		vector_in[i] *= escalar;
+		vector_out[i] = vector_in[i]*escalar;
 	}
 }
 
-static void producto_escalar16(uint16_t* vector_in, uint32_t longitud, uint16_t escalar)
+static void producto_escalar16(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud, uint16_t escalar)
 {
 	for(uint32_t i = 0; i < longitud; i++) {
-		vector_in[i] *= escalar;
+		vector_out[i] = vector_in[i]*escalar;
 	}
 }
 
 
-static void producto_escalar12(uint16_t* vector_in, uint32_t longitud, uint16_t escalar)
+static void producto_escalar12(uint16_t* vector_in, uint16_t* vector_out, uint32_t longitud, uint16_t escalar)
 {
 	for(uint32_t i = 0; i < longitud; i++) {
 		uint32_t res = (uint32_t)vector_in[i] * (uint32_t)escalar;
-		vector_in[i] = (res > 4095) ? 4095 : (uint16_t)res;
+		vector_out[i] = (res > 4095) ? 4095 : (uint16_t)res;
 	}
 }
 
