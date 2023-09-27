@@ -37,3 +37,10 @@ Dado que estamos hablando de una arquitectura de 32 bits, se pueden direccionar 
 * Periféricos, tanto propietarios como comunes (ie NVIC).
 
 ![Cortex-M MemMap](Resources/cortex-m-memory-map.jpg "Mapa de memoria")
+
+### ¿Qué ventajas presenta el uso de los “shadowed pointers” del PSP y el MSP?
+Un "shadowed stack pointer" permite que el stack de código privilegiado y no privilegiado se encuentren en diferentes regiones de memoria, lo que termina mejorando la estabilidad/confiabilidad del sistema.
+
+![Cortex-M Stacks](Resources/arm-arch-core-execmode-2.svg "Separación de stacks")
+
+Las tareas no provilegiadas usarán el `PSP` (`Process Stack Pointer`) mientras que las privilegiadas (usualmente el scheduler/kernel de un RTOS o el mismo código baremetal) usará el `MSP` (`Main Stack Pointer`). De este modo, cuando ocurran excepciones/interrupciones el procesador puede usar directamente el `MSP` sin tener que preocuparse sobre manejar el `PSP`.
