@@ -62,3 +62,13 @@ Además de este modo Thread, se encuentra el `Handler Mode`, el cual ocurre cuan
 Una vez que el procesador entra en modo Thread no privilegiado, no puede regresar directamente al modo privilegiado. Para que esto suceda, debe primero ocurrir una excepción (por ejemplo la del SysTick o una SVC, Supervisor Call) de modo que el procesador vuelva a tener los privilegios necesarios como para modificar el registro `CONTROL`.
 
 ![Cortex-M Stacks](Resources/change-of-mode.png "Cambio de modo entre thread privilegiado y thread no privilegiado")
+
+
+### ¿Qué se entiende por modelo de registros ortogonal? Dé un ejemplo
+Un modelo de registros ortogonal se refiere a un diseño de arquitectura de procesadores en el que los registros de propósito general pueden utilizarse de manera más flexible e intercambiable en una variedad de instrucciones y operaciones. En otras palabras, en un modelo ortogonal, no hay restricciones rígidas sobre qué registros pueden ser fuente o destino en instrucciones específicas. Esto aporta versatilidad a la arquitectura, lo que puede simplificar la programación y la compilación.
+
+```
+add r1, r2, r3  // Sumo r1 = r2 + r3 (r1 es destino)
+sub r4, r1, r5  // Resto r4 = r1 - r5 (r1 es fuente)
+usat r1, #12, r1 // Saturo r1 a 12 bits (r1 es fuente y destino)
+```
