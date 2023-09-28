@@ -56,7 +56,7 @@ int main(void)
 
     // Testeo pasaje de modo privilegiado a no privilegiado y viceversa
     // El pasaje de no privilegiado a privilegiado se hará a través de una excepcion SVC.
-    svc_privileges()
+    svc_privileges();
 
     // Línea para activar el conteo de ciclos (se debe ejecutar una sola vez)
     DWT->CTRL |= 1 << DWT_CTRL_CYCCNTENA_Pos;
@@ -117,6 +117,23 @@ int main(void)
     DWT->CYCCNT = 0;
     asm_producto_escalar12(vec_asm12, vec_out12, 5, 2);
     cnt_asm = DWT->CYCCNT;
+    // ------------------------------------------- //
+
+
+    // ------------------- MAX ------------------- //
+    int32_t vec_c_max[5] = {-54, 67, 3, 45, -4};
+    int32_t vec_asm_max[5] = {-54, 67, 3, 45, -4};
+    volatile int32_t max_c;
+    volatile int32_t max_asm;
+
+
+    DWT->CYCCNT = 0;
+    max_c = max(vec_c_max, 5);
+    cnt_c = DWT->CYCCNT;
+
+    DWT->CYCCNT = 0;
+    max_asm = asm_max(vec_asm_max, 5);
+    cnt_c = DWT->CYCCNT;
     // ------------------------------------------- //
 
 

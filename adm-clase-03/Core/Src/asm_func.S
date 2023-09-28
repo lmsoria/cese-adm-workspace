@@ -71,18 +71,7 @@
     		bne loop
 
     	exit:
-	        bx lr       @ vuelve adonde fue llamada (especificamente, si "pc"
-	                    @ es la direccion, en el codigo del programa, de la
-	                    @ instruccion "bl asm_sum" usada para saltar a
-	                    @ esta funcion, entonces "lr" contiene ese "pc" + 4).
-	                    @ el valor de retorno debe quedar en el registro r0.
-	                    @ En este caso, r0 es el resultado de r0 + r1.
-
-        @ Otras alternativas para el retorno
-        @ mov pc,lr
-        @ bx lr
-        @ push {lr} ... pop {pc}
-
+	        bx lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -96,12 +85,6 @@
 @
 .thumb_func
     asm_producto_escalar32:
-    	// Guardas de seguridad. Tener mas en cuenta para divisiones por 0
-    	// cbz r0, exit_producto_escalar32
-    	// cbz r1, exit_producto_escalar32
-    	// cbz r2, exit_producto_escalar32
-    	// cbz r3, exit_producto_escalar32
-
     	push {r4}
 
     	loop_producto_escalar32:
@@ -115,20 +98,9 @@
 
     		bne loop_producto_escalar32
 
-
 		pop {r4}
     	exit_producto_escalar32:
-	        bx lr       @ vuelve adonde fue llamada (especificamente, si "pc"
-	                    @ es la direccion, en el codigo del programa, de la
-	                    @ instruccion "bl asm_sum" usada para saltar a
-	                    @ esta funcion, entonces "lr" contiene ese "pc" + 4).
-	                    @ el valor de retorno debe quedar en el registro r0.
-	                    @ En este caso, r0 es el resultado de r0 + r1.
-
-        @ Otras alternativas para el retorno
-        @ mov pc,lr
-        @ bx lr
-        @ push {lr} ... pop {pc}
+	        bx lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -158,18 +130,7 @@
 
 		pop {r4}
     	exit_producto_escalar16:
-	        bx lr       @ vuelve adonde fue llamada (especificamente, si "pc"
-	                    @ es la direccion, en el codigo del programa, de la
-	                    @ instruccion "bl asm_sum" usada para saltar a
-	                    @ esta funcion, entonces "lr" contiene ese "pc" + 4).
-	                    @ el valor de retorno debe quedar en el registro r0.
-	                    @ En este caso, r0 es el resultado de r0 + r1.
-
-        @ Otras alternativas para el retorno
-        @ mov pc,lr
-        @ bx lr
-        @ push {lr} ... pop {pc}
-
+	        bx lr
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -199,18 +160,7 @@
 
 		pop {r4}
     	exit_producto_escalar12:
-	        bx lr       @ vuelve adonde fue llamada (especificamente, si "pc"
-	                    @ es la direccion, en el codigo del programa, de la
-	                    @ instruccion "bl asm_sum" usada para saltar a
-	                    @ esta funcion, entonces "lr" contiene ese "pc" + 4).
-	                    @ el valor de retorno debe quedar en el registro r0.
-	                    @ En este caso, r0 es el resultado de r0 + r1.
-
-        @ Otras alternativas para el retorno
-        @ mov pc,lr
-        @ bx lr
-        @ push {lr} ... pop {pc}
-
+	        bx lr
 
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -218,42 +168,26 @@
 @
 @ Parametros recibidos:
 @   r0: vector_in
-@   r2: longitud
+@   r1: longitud
 @ Valor de retorno:
-@   r0: resultado de la suma de firstOperand y secondOperand
+@   r0: maximo elemento del array
 @
 .thumb_func
     asm_max:
-    	// Guardas de seguridad. Tener mas en cuenta para divisiones por 0
-    	// cbz r0, exit_producto_escalar32
-    	// cbz r1, exit_producto_escalar32
-    	// cbz r2, exit_producto_escalar32
-    	// cbz r3, exit_producto_escalar32
+    	// En r2 voy a guardar el maximo. Arranco inicializandolo con el ultimo elemento del array
+    	subs r1, #1 // Decremento en uno el "contador"
+    	ldr r2, [r0, r1, LSL #2] // *(r0 + (r1<<2)) = r2
 
-    	push {r4}
+    	loop_max:
+    		subs r1, #1 // Decremento en uno el "contador"
+    		ldr r3, [r0, r1, LSL #2] // *(r0 + (r1<<2)) = r3 (uso r3 para recorrer el array)
 
-    	loop_producto_escalar32:
-    		subs r2, #1 // Decremento en uno el "contador"
+    		cmp r3, r2
+    		it gt
+			movgt r2, r3
+			cbz r1, exit_max
+    		b loop_max
 
-    		ldr r4, [r0, r2, LSL #2] // Guardo en r4 (auxiliar) *(r0 + (r2<<2)) = r4
-
-    		//mul Rd, Rn, Rm -> Rd = Rn*Rm
-    		mul r4, r4, r3 // r4 = r4*r3 (r3 ganancia)
-    		str r4, [r1, r2, LSL #2] // *(r1 + (r2<<2)) = r4 (equivalente a decir que escribo el producto por un escalar en el vector de salida)
-
-    		bne loop_producto_escalar32
-
-
-		pop {r4}
-    	exit_producto_escalar32:
-	        bx lr       @ vuelve adonde fue llamada (especificamente, si "pc"
-	                    @ es la direccion, en el codigo del programa, de la
-	                    @ instruccion "bl asm_sum" usada para saltar a
-	                    @ esta funcion, entonces "lr" contiene ese "pc" + 4).
-	                    @ el valor de retorno debe quedar en el registro r0.
-	                    @ En este caso, r0 es el resultado de r0 + r1.
-
-        @ Otras alternativas para el retorno
-        @ mov pc,lr
-        @ bx lr
-        @ push {lr} ... pop {pc}
+    	exit_max:
+    		mov r0, r2
+	        bx lr
