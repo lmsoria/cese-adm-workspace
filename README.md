@@ -92,3 +92,10 @@ ite gt             // Si r0 > r1, ejecuta la siguiente instrucción; de lo contr
 movgt r2, r0       // Si r0 > r1, copia el valor de r0 en r2
 movle r2, r1       // Si r0 <= r1, copia el valor de r1 en r2
 ```
+
+### Describa brevemente las excepciones más prioritarias (reset, NMI, Hardfault).
+* Reset: Esta es la excepción de mayor prioridad y ocurre cuando se enciende o reinicia el microcontrolador. La excepción de reinicio se encarga de configurar el sistema inicialmente, incluyendo la configuración de registros de control, vectores de interrupción y la inicialización de memoria. Es la excepción que da inicio a la ejecución del programa.
+
+* NMI (Non-Maskable Interrupt - Interrupción no enmascarable): La NMI es la segunda excepción de mayor prioridad. Es "no enmascarable" porque no puede ser deshabilitada o bloqueada por un usuario o el sistema operativo. Se utiliza para eventos críticos que requieren una atención inmediata, como fallos de hardware, supervisión de seguridad o eventos externos que no deben ser ignorados.
+
+* Hard Fault: Es la tercera excepción de mayor prioridad. Se produce cuando ocurre un error grave o una excepción sin manejo adecuado. Puede ser causada por una variedad de condiciones, como intentos de acceder a memoria no válida, divisiones por cero, violaciones de acceso, o intentos de ejecutar instrucciones no admitidas.
