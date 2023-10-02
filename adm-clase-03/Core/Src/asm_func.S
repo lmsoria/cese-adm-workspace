@@ -11,6 +11,8 @@
 .global asm_producto_escalar12
 .global asm_pack32_to_16
 .global asm_max
+.global asm_mean
+.global asm_mean_simd
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -223,4 +225,60 @@
 
     	exit_max:
     		mov r0, r2
+	        bx lr
+
+
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@   void asm_mean(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
+@
+@ Parametros recibidos:
+@   r0: x
+@   r1: y
+@   r2: z
+@   r3: N
+@
+.thumb_func
+    asm_mean:
+    	push {r4, r5}
+    	loop_mean:
+    		subs r3, #1
+    		ldrh r4, [r0, r3, LSL #1]
+    		ldrh r5, [r1, r3, LSL #1]
+    		add r5, r4
+    		lsr r5, #1
+    		strh r5, [r2, r3, LSL #1]
+    		cbz r3, exit_mean
+    		b loop_mean
+
+    	exit_mean:
+    		pop {r4, r5}
+	        bx lr
+
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@   void asm_mean_simd(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
+@
+@ Parametros recibidos:
+@   r0: x
+@   r1: y
+@   r2: z
+@   r3: N
+@
+.thumb_func
+    asm_mean_simd:
+    	push {r4, r5}
+    	lsr r3, #1 // divido por dos el contador
+
+    	loop_mean_simd:
+    		subs r3, #1
+    		ldr r4, [r0, r3, LSL #2]
+    		ldr r5, [r1, r3, LSL #2]
+    		uhadd16 r5, r5, r4
+    		str r5, [r2, r3, LSL #2]
+    		cbz r3, exit_mean_simd
+    		b loop_mean
+
+    	exit_mean_simd:
+    		pop {r4, r5}
 	        bx lr

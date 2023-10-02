@@ -43,11 +43,19 @@ static void downsample_N(int32_t* vector_in, int32_t* vector_out, uint32_t longi
 // 9) Realizar una función que reciba un vector de muestras no signadas de 16 bits e invierta su orden.
 static void invertir (uint16_t* vector, uint32_t longitud);
 
+static void mean(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N)
+{
+	for(uint16_t n = 0; n < N; n++) {
+		z[n] = (x[n] + y[n]) >> 1;
+	}
+}
+
 int main(void)
 {
 	// Variables para contar ciclos.
 	volatile uint32_t cnt_c = 0;
 	volatile uint32_t cnt_asm = 0;
+	volatile uint32_t cnt_asm_simd = 0;
     HAL_Init();
     SystemClock_Config();
     MX_GPIO_Init();
@@ -152,6 +160,33 @@ int main(void)
     cnt_c = DWT->CYCCNT;
     // ------------------------------------------- //
 
+
+    // ----------------- PROMEDIO ---------------- //
+    uint16_t x_c[4] = {10, 20, 30, 40};
+    uint16_t y_c[4] = {20, 30, 40, 50};
+    uint16_t z_c[4] = {0};
+
+
+    uint16_t x_asm[4] = {10, 20, 30, 40};
+    uint16_t y_asm[4] = {20, 30, 40, 50};
+    uint16_t z_asm[4] = {0};
+
+    uint16_t x_asm_simd[4] = {10, 20, 30, 40};
+    uint16_t y_asm_simd[4] = {20, 30, 40, 50};
+    uint16_t z_asm_simd[4] = {0};
+
+    DWT->CYCCNT = 0;
+    mean(x_c, y_c, z_c, 4);
+    cnt_c = DWT->CYCCNT;
+
+    DWT->CYCCNT = 0;
+    asm_mean(x_asm, y_asm, z_asm, 4);
+    cnt_asm = DWT->CYCCNT;
+
+    DWT->CYCCNT = 0;
+    asm_mean_simd(x_asm, y_asm, z_asm, 4);
+    cnt_asm = DWT->CYCCNT;
+    // ------------------------------------------- //
 
     while (1){}
 }

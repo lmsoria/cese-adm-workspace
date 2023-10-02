@@ -37,3 +37,8 @@ void asm_downsample_N(int32_t* vector_in, int32_t* vector_out, uint32_t longitud
 
 // 9) Realizar una función que reciba un vector de muestras no signadas de 16 bits e invierta su orden.
 void asm_invertir(uint16_t* vector, uint32_t longitud);
+
+
+void asm_mean(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
+
+void asm_mean_simd(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
