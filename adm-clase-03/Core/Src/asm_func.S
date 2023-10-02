@@ -9,6 +9,7 @@
 .global asm_producto_escalar32
 .global asm_producto_escalar16
 .global asm_producto_escalar12
+.global asm_pack32_to_16
 .global asm_max
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -160,6 +161,37 @@
 
 		pop {r4}
     	exit_producto_escalar12:
+	        bx lr
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@    void asm_pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud);
+@
+@ Parametros recibidos:
+@   r0: vector_in
+@   r1: vector_out
+@   r2: longitud
+@
+.thumb_func
+    asm_pack32_to_16:
+    	push {r4}
+
+    	loop_pack32_to_16:
+    		subs r2, #1 // Decremento en uno el "contador"
+
+    		ldr r3, [r0, r2, LSL #2]
+    		cmp r3, #0	// Equivalente a hacer R3 - 0, lo unico que me interesa aqui es modificar el APSR para ver los flags de signo
+    		ite mi // MI -> Minus/negative
+    		asrmi r4, r3, #16 // Si el numero es negativo uso un aritmethic shift (ie relleno con 1's por la izquierda para conservar signo)
+    		lsrpl r4, r3, #16 // De lo contrario, uso un shift logico nomas (ie relleno con 0's)
+
+    		strh r4, [r1, r2, LSL #1]
+
+    		cbz r2, exit_pack32_to_16
+    		b loop_pack32_to_16
+
+    	exit_pack32_to_16:
+    		pop {r4}
 	        bx lr
 
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

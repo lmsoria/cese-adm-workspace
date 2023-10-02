@@ -25,7 +25,7 @@ void asm_filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t lo
 
 // 6) Realizar una función que reciba un vector de números signados de 32 bits y los “empaquete” en
 // otro vector de 16 bits. La función deberá adecuar los valores de entrada a la nueva precisión
-void asm_pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud);
+void asm_pack32_to_16(int32_t* vector_in, int16_t* vector_out, uint32_t longitud);
 
 // 7) Realizar una función que reciba un vector de números signados de 32 bits y devuelva la posición
 // del máximo del vector.

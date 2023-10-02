@@ -30,7 +30,7 @@ static void filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t
 
 // 6) Realizar una función que reciba un vector de números signados de 32 bits y los “empaquete” en
 // otro vector de 16 bits. La función deberá adecuar los valores de entrada a la nueva precisión
-static void pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud);
+static void pack32_to_16(int32_t* vector_in, int16_t* vector_out, uint32_t longitud);
 
 // 7) Realizar una función que reciba un vector de números signados de 32 bits y devuelva la posición
 // del máximo del vector.
@@ -120,6 +120,20 @@ int main(void)
     // ------------------------------------------- //
 
 
+    // -------------- PACK 32 TO 16 -------------- //
+    int32_t vec_pack_c[4] = {0xFAFA0000, 0x5A5A0000, 0xFEDE0000, 0x42FF0000};
+    int32_t vec_pack_asm[4] = {0xFAFA0000, 0x5A5A0000, 0xFEDE0000, 0x42FF0000};
+    int16_t vec_pack_out_c[4];
+    int16_t vec_pack_out_asm[4];
+
+    DWT->CYCCNT = 0;
+    pack32_to_16(vec_pack_c, vec_pack_out_c, 4);
+    cnt_c = DWT->CYCCNT;
+
+    DWT->CYCCNT = 0;
+    asm_pack32_to_16(vec_pack_asm, vec_pack_out_asm, 4);
+    cnt_asm = DWT->CYCCNT;
+    // ------------------------------------------- //
     // ------------------- MAX ------------------- //
     int32_t vec_c_max[5] = {-54, 67, 3, 45, -4};
     int32_t vec_asm_max[5] = {-54, 67, 3, 45, -4};
@@ -290,9 +304,11 @@ static void filtro_ventana10(uint16_t* vector_in, uint16_t* vector_out, uint32_t
 
 }
 
-static void pack32_to_16(int32_t* vector_in, int16_t vector_out, uint32_t longitud)
+static void pack32_to_16(int32_t* vector_in, int16_t* vector_out, uint32_t longitud)
 {
-
+	for(uint32_t i = 0; i < longitud; i++) {
+		vector_out[i] = (int16_t)(vector_in[i] >> 16);
+	}
 }
 
 static int32_t max(int32_t* vector_in, uint32_t longitud)
