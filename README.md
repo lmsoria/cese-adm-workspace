@@ -125,3 +125,8 @@ El proceso típico de llamada a funciones y retorno en Cortex-M implica:
 2. Durante la ejecución de la función, las variables locales y los registros se manipulan en la pila.
 
 3. Al salir de la función, los valores se recuperan de la pila y se restaura el estado original, lo que permite el retorno adecuado a la función que realizó la llamada.
+
+###  Describa la secuencia de reset del microprocesador
+Después del reset y antes de que comience a ejecutar el programa propiamente dicho, el procesador lee las dos primeras palabras (64 bits) de la memoria, correspondientes al valor inicial del MSP y el vector de reset, el cual contiene la dirección del `Reset Handler`. Después de leer estos dos valores, el procesador carga el MSP y el PC con ellos.
+![Cortex-M Reset Sequence](resources/reset-sequence.png "Secuencia de Reset")
+![Cortex-M REset Example](resources/initial-reset-example.png "Ejemplo de inicialización del programa")
