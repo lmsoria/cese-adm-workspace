@@ -99,3 +99,29 @@ movle r2, r1       // Si r0 <= r1, copia el valor de r1 en r2
 * NMI (Non-Maskable Interrupt - Interrupción no enmascarable): La NMI es la segunda excepción de mayor prioridad. Es "no enmascarable" porque no puede ser deshabilitada o bloqueada por un usuario o el sistema operativo. Se utiliza para eventos críticos que requieren una atención inmediata, como fallos de hardware, supervisión de seguridad o eventos externos que no deben ser ignorados.
 
 * Hard Fault: Es la tercera excepción de mayor prioridad. Se produce cuando ocurre un error grave o una excepción sin manejo adecuado. Puede ser causada por una variedad de condiciones, como intentos de acceder a memoria no válida, divisiones por cero, violaciones de acceso, o intentos de ejecutar instrucciones no admitidas.
+
+### Describa las funciones principales de la pila. ¿Cómo resuelve la arquitectura el llamado a funciones y su retorno?
+
+La función principal del stack es administrar la memoria para llevar un registro de las llamadas a funciones y las variables locales, permitiendo la ejecución de subrutinas de manera eficiente y ordenada. Aquí están las funciones principales del stack:
+
+ * Llamadas y Retorno de Funciones: El stack se utiliza para gestionar las llamadas y retornos de funciones. Cuando se llama a una función, se almacenan en la pila la dirección de retorno (donde la ejecución debe continuar después de la función) y los valores de los registros que deben preservarse. Cuando se retorna de la función, se desapilan estos valores para restaurar el estado anterior.
+
+ * Almacenamiento de Variables Locales: Las variables locales de una función se almacenan en el stack. Cuando se ingresa a una función, se reservan espacios en la pila para estas variables. A medida que se crean y destruyen variables locales, los datos se apilan y desapilan.
+
+* Gestión de Llamadas Anidadas: El stack permite manejar llamadas a funciones anidadas, es decir, cuando una función llama a otra dentro de su propio contexto. Cada llamada crea un nuevo marco de pila, lo que permite que las funciones anidadas mantengan su propio estado y variables locales sin interferir con otras llamadas.
+
+* Recuperación de Datos: El stack facilita la recuperación de datos en el orden inverso al que se almacenaron. Esto asegura que las variables locales y los registros se restauren correctamente al retornar de una función, lo que mantiene la consistencia del estado de la aplicación.
+
+En cuanto a cómo la arquitectura Cortex-M resuelve las llamadas a funciones y su retorno, esta arquitectura utiliza registros específicos para administrar el stack y gestionar las llamadas a funciones. Los registros más importantes relacionados con el stack son:
+
+* `PSP (Process Stack Pointer)`: Se utiliza como puntero al stack para las rutinas de usuario. Cuando se llama a una función, se almacenan los registros relevantes y las variables locales en la pila gestionada por el PSP.
+
+* `MSP (Main Stack Pointer)`: Se utiliza como puntero al stack principal del sistema y se usa principalmente para gestionar excepciones y llamadas a funciones desde excepciones. El MSP es típicamente utilizado para el stack en modo privilegiado o en excepciones.
+
+El proceso típico de llamada a funciones y retorno en Cortex-M implica:
+
+1. Al ingresar a una función, se reserva espacio en la pila (gestionada por el PSP) para las variables locales y se almacenan los registros relevantes.
+
+2. Durante la ejecución de la función, las variables locales y los registros se manipulan en la pila.
+
+3. Al salir de la función, los valores se recuperan de la pila y se restaura el estado original, lo que permite el retorno adecuado a la función que realizó la llamada.
