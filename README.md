@@ -72,3 +72,23 @@ add r1, r2, r3  // Sumo r1 = r2 + r3 (r1 es destino)
 sub r4, r1, r5  // Resto r4 = r1 - r5 (r1 es fuente)
 usat r1, #12, r1 // Saturo r1 a 12 bits (r1 es fuente y destino)
 ```
+
+### ¿Qué ventajas presenta el uso de intrucciones de ejecución condicional (IT)? Dé un ejemplo
+Las instrucciones de ejecución condicional permiten ejecutar instrucciones condicionalmente en función de una evaluación de banderas de estado (flags) sin requerir saltos (branch) explícitos. Esto proporciona ventajas significativas:
+
+* Código más compacto: Al eliminar la necesidad de saltos condicionales explícitos, el código resultante suele ser más compacto y eficiente en términos de uso de memoria.
+
+* Mejora de la predicción de saltos: La ausencia de saltos condicionales significa que no hay saltos que puedan ser mal predichos por la unidad de predicción de saltos del procesador, lo que ayuda a evitar penalizaciones en el rendimiento.
+
+* Menos riesgo de saltos mal predichos: Al minimizar el uso de saltos condicionales, se reduce el riesgo de saltos mal predichos, lo que podría llevar a un rendimiento más predecible en términos de ciclos de reloj.
+
+* Facilita el paralelismo del compilador: Los compiladores pueden generar código más eficiente y paralelo al aprovechar las instrucciones de ejecución condicional.
+
+* Más legible: El uso de instrucciones de ejecución condicional puede hacer que el código sea más legible y fácil de seguir, ya que la condición de ejecución se establece claramente en el código.
+
+```
+cmp r0, r1         // Compara r0 y r1
+ite gt             // Si r0 > r1, ejecuta la siguiente instrucción; de lo contrario, salta a la siguiente instrucción.
+movgt r2, r0       // Si r0 > r1, copia el valor de r0 en r2
+movle r2, r1       // Si r0 <= r1, copia el valor de r1 en r2
+```
