@@ -207,18 +207,19 @@
 .thumb_func
     asm_max:
     	// En r2 voy a guardar el maximo. Arranco inicializandolo con el ultimo elemento del array
-    	subs r1, #1 // Decremento en uno el "contador"
+    	sub r1, #1 // Decremento en uno el "contador"
     	ldr r2, [r0, r1, LSL #2] // *(r0 + (r1<<2)) = r2
+    	subs r1, #1 // Decremento en uno el "contador"
 
     	loop_max:
-    		subs r1, #1 // Decremento en uno el "contador"
     		ldr r3, [r0, r1, LSL #2] // *(r0 + (r1<<2)) = r3 (uso r3 para recorrer el array)
 
     		cmp r3, r2
     		it gt
 			movgt r2, r3
-			cbz r1, exit_max
-    		b loop_max
+
+			subs r1, #1 // Decremento en uno el "contador"
+			bne loop_max
 
     	exit_max:
     		mov r0, r2

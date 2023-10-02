@@ -134,19 +134,21 @@ int main(void)
     asm_pack32_to_16(vec_pack_asm, vec_pack_out_asm, 4);
     cnt_asm = DWT->CYCCNT;
     // ------------------------------------------- //
+
+
     // ------------------- MAX ------------------- //
-    int32_t vec_c_max[5] = {-54, 67, 3, 45, -4};
-    int32_t vec_asm_max[5] = {-54, 67, 3, 45, -4};
+    int32_t vec_c_max[6] = {0, -54, 50, 3, 45, -4};
+    int32_t vec_asm_max[6] = {0, -54, 50, 3, 45, -4};
     volatile int32_t max_c;
     volatile int32_t max_asm;
 
 
     DWT->CYCCNT = 0;
-    max_c = max(vec_c_max, 5);
+    max_c = max(vec_c_max, 6);
     cnt_c = DWT->CYCCNT;
 
     DWT->CYCCNT = 0;
-    max_asm = asm_max(vec_asm_max, 5);
+    max_asm = asm_max(vec_asm_max, 6);
     cnt_c = DWT->CYCCNT;
     // ------------------------------------------- //
 
