@@ -36,12 +36,12 @@ Dado que estamos hablando de una arquitectura de 32 bits, se pueden direccionar 
 * Memoria de datos
 * Periféricos, tanto propietarios como comunes (ie NVIC).
 
-![Cortex-M MemMap](Resources/cortex-m-memory-map.jpg "Mapa de memoria")
+![Cortex-M MemMap](resources/cortex-m-memory-map.jpg "Mapa de memoria")
 
 ### ¿Qué ventajas presenta el uso de los “shadowed pointers” del PSP y el MSP?
 Un "shadowed stack pointer" permite que el stack de código privilegiado y no privilegiado se encuentren en diferentes regiones de memoria, lo que termina mejorando la estabilidad/confiabilidad del sistema.
 
-![Cortex-M Stacks](Resources/arm-arch-core-execmode-2.svg "Separación de stacks")
+![Cortex-M Stacks](resources/arm-arch-core-execmode-2.svg "Separación de stacks")
 
 Las tareas no provilegiadas usarán el `PSP` (`Process Stack Pointer`) mientras que las privilegiadas (usualmente el scheduler/kernel de un RTOS o el mismo código baremetal) usará el `MSP` (`Main Stack Pointer`). De este modo, cuando ocurran excepciones/interrupciones el procesador puede usar directamente el `MSP` sin tener que preocuparse sobre manejar el `PSP`.
 
@@ -53,7 +53,7 @@ En el modo privilegiado, el procesador tiene acceso completo a todos los recurso
 
 En contraparte, en el modo no privilegiado el procesador tiene un acceso limitado a los recursos y no puede ejecutar ciertas instrucciones. El código en este modo suele ser el código de las tareas de usuario, que no necesita acceso a recursos críticos.
 
-![Cortex-M Stacks](Resources/operation-states-and-modes.png "Modos de operación")
+![Cortex-M Stacks](resources/operation-states-and-modes.png "Modos de operación")
 
 Tanto el modo privilegiado como el no privilegiado son parte de lo que en la arquitectura se conoce como `Thread Mode`. El cambio entre un modo y otro se hace modificando un registro especial denominado `CONTROL`.
 
@@ -61,7 +61,7 @@ Además de este modo Thread, se encuentra el `Handler Mode`, el cual ocurre cuan
 
 Una vez que el procesador entra en modo Thread no privilegiado, no puede regresar directamente al modo privilegiado. Para que esto suceda, debe primero ocurrir una excepción (por ejemplo la del SysTick o una SVC, Supervisor Call) de modo que el procesador vuelva a tener los privilegios necesarios como para modificar el registro `CONTROL`.
 
-![Cortex-M Stacks](Resources/change-of-mode.png "Cambio de modo entre thread privilegiado y thread no privilegiado")
+![Cortex-M Stacks](resources/change-of-mode.png "Cambio de modo entre thread privilegiado y thread no privilegiado")
 
 
 ### ¿Qué se entiende por modelo de registros ortogonal? Dé un ejemplo
