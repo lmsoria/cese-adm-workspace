@@ -167,3 +167,24 @@ Las principales funciones y características del CMSIS son las siguientes:
 * Soporte para Herramientas y Depuración: El CMSIS es compatible con una variedad de herramientas de desarrollo y depuración, lo que simplifica el proceso de desarrollo y depuración de aplicaciones para microcontroladores.
 
 * Optimización de Rendimiento: CMSIS a menudo incluye implementaciones altamente optimizadas de funciones comunes, lo que puede mejorar el rendimiento y la eficiencia del código generado para el microcontrolador.
+
+### Cuando ocurre una interrupción, asumiendo que está habilitada ¿Cómo opera el microprocesador para atender a la subrutina correspondiente? Explique con un ejemplo
+
+
+1. Detección de la Interrupción: El microcontrolador detecta una interrupción activa. Esto puede deberse a una variedad de eventos, como una entrada de un sensor, un temporizador que alcanza un valor específico o una solicitud de interrupción externa.
+
+2. Guardar el Estado Actual: Antes de saltar a la subrutina de interrupción, el microprocesador debe guardar su estado actual. Esto incluye el contenido de los registros y la dirección de retorno. Esta información se almacena en la pila. El controlador de interrupciones también puede deshabilitar temporalmente otras interrupciones para evitar que se produzcan interrupciones anidadas no deseadas.
+
+3. Vector de Interrupción: El microprocesador consulta una tabla de vectores de interrupción para determinar la dirección de inicio de la subrutina de manejo de interrupción correspondiente. Cada interrupción tiene su propia dirección de entrada en la tabla de vectores.
+
+![Vector Table](resources/vector-table.png "Vector de Interrupciones")
+
+4. Salto a la Subrutina de Interrupción: El microprocesador carga la dirección de inicio de la subrutina de manejo de interrupción desde la tabla de vectores y salta a esa dirección. Esto inicia la ejecución de la subrutina de interrupción.
+
+5. Ejecución de la Subrutina de Interrupción: La subrutina de interrupción realiza las acciones necesarias en respuesta a la interrupción. Esto puede incluir la lectura de datos de sensores, el procesamiento de datos, la actualización de registros, etc. La subrutina también puede realizar operaciones de limpieza y restaurar el estado previo si es necesario.
+
+6. Fin de la Subrutina de Interrupción: Una vez que la subrutina de interrupción ha completado su trabajo, ejecuta una instrucción de retorno de interrupción (por ejemplo, `bx lr`) para indicar que ha terminado. Esto permite que el microprocesador recupere su estado anterior.
+
+7. Recuperación del Estado Anterior: El microprocesador recupera el estado que se guardó en la pila al comienzo de la interrupción, incluyendo el contenido de los registros y la dirección de retorno. Esto restaura el estado del programa al punto donde se detuvo antes de la interrupción.
+
+8. Reanudación de la Ejecución: Con el estado anterior restaurado, la ejecución del programa principal se reanuda desde donde se detuvo antes de la interrupción.
