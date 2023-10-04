@@ -130,7 +130,7 @@ El proceso típico de llamada a funciones y retorno en Cortex-M implica:
 Después del reset y antes de que comience a ejecutar el programa propiamente dicho, el procesador lee las dos primeras palabras (64 bits) de la memoria, correspondientes al valor inicial del MSP y el vector de reset, el cual contiene la dirección del `Reset Handler`. Después de leer estos dos valores, el procesador carga el MSP y el PC con ellos.
 
 ![Cortex-M Reset Sequence](resources/reset-sequence.png "Secuencia de Reset")
-![Cortex-M REset Example](resources/initial-reset-example.png "Ejemplo de inicialización del programa")
+![Cortex-M Reset Example](resources/initial-reset-example.png "Ejemplo de inicialización del programa")
 
 ### ¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos?
 Los Core Peripherals son periféricos integrados en el núcleo del microcontrolador, y están definidos por la arquitectura. Por otro lado, la implementación de los periféricos "estándar" dependerá de cada fabricante.
@@ -143,3 +143,9 @@ En la arquitectura Cortex-M4 se encuentran los siguientes Core Peripherals:
 * System Timer (SysTick): Es un timer decremental de 24 bits, utilizado para temporizar RTOS.
 * Memory Protection Unit (MPU): Ayuda a aumentar la confiabilidad del sistema al asignarle atributos a distintas regiones de memoria (hasta ocho regiones diferentes). De esta forma, cada tarea ejecutando podra acceder solo a las regiones que tenga asignadas.
 * Floating Point Unit (FPU): Se trata de un co-procesador que permite realizar operaciones aritméticas de punto flotante (simple precisión, 32 bits) de acuerdo a la especificación IEEE-754.
+
+### ¿Cómo se implementan las prioridades de las interrupciones? Dé un ejemplo
+Todas las interrupciones son manejadas por en NVIC. Este controlador define hasta 256 posibles interrupciones, de las cuales las primeras 16 son excepciones propias del microcontrolador, de acuerdo a la siguiente tabla:
+![Cortex-M Interrupts](resources/exception-types.png "Tipos de Excepciones")
+
+La prioridad de una excepción esta dada por un número entero: cuanto menor sea este, más alta sera la prioridad. La excepción de más prioridad posible es la de Reset (con prioridad -3). A continucación viene la NMI, y en tercer lugar la excepcion de HardFault. A partir de aquí, todas las excepciones tienen prioridades que pueden ser configurables por el usuario.
