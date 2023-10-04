@@ -128,5 +128,18 @@ El proceso típico de llamada a funciones y retorno en Cortex-M implica:
 
 ###  Describa la secuencia de reset del microprocesador
 Después del reset y antes de que comience a ejecutar el programa propiamente dicho, el procesador lee las dos primeras palabras (64 bits) de la memoria, correspondientes al valor inicial del MSP y el vector de reset, el cual contiene la dirección del `Reset Handler`. Después de leer estos dos valores, el procesador carga el MSP y el PC con ellos.
+
 ![Cortex-M Reset Sequence](resources/reset-sequence.png "Secuencia de Reset")
 ![Cortex-M REset Example](resources/initial-reset-example.png "Ejemplo de inicialización del programa")
+
+### ¿Qué entiende por “core peripherals”? ¿Qué diferencia existe entre estos y el resto de los periféricos?
+Los Core Peripherals son periféricos integrados en el núcleo del microcontrolador, y están definidos por la arquitectura. Por otro lado, la implementación de los periféricos "estándar" dependerá de cada fabricante.
+
+Estos Core Peripherals son fundamentales para el funcionamiento del microcontrolador y están diseñados para brindar funcionalidad básica y control sobre el sistema.
+
+En la arquitectura Cortex-M4 se encuentran los siguientes Core Peripherals:
+* Nested Vectored Interrupt Controller (NVIC): Es un controlador de interrupciones vectorizadas anidadas que soporta un procesamiento de baja latencia ante la presencia de interrupciones.
+* System Control Block (SCB): Es el modelo de interfaz al procesador. Provee información sobre la implementación y control del sistema, incluyendo configuración, control y reporte de excepciones.
+* System Timer (SysTick): Es un timer decremental de 24 bits, utilizado para temporizar RTOS.
+* Memory Protection Unit (MPU): Ayuda a aumentar la confiabilidad del sistema al asignarle atributos a distintas regiones de memoria (hasta ocho regiones diferentes). De esta forma, cada tarea ejecutando podra acceder solo a las regiones que tenga asignadas.
+* Floating Point Unit (FPU): Se trata de un co-procesador que permite realizar operaciones aritméticas de punto flotante (simple precisión, 32 bits) de acuerdo a la especificación IEEE-754.
