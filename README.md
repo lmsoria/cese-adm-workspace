@@ -149,3 +149,21 @@ Todas las interrupciones son manejadas por en NVIC. Este controlador define hast
 ![Cortex-M Interrupts](resources/exception-types.png "Tipos de Excepciones")
 
 La prioridad de una excepción esta dada por un número entero: cuanto menor sea este, más alta sera la prioridad. La excepción de más prioridad posible es la de Reset (con prioridad -3). A continucación viene la NMI, y en tercer lugar la excepcion de HardFault. A partir de aquí, todas las excepciones tienen prioridades que pueden ser configurables por el usuario.
+
+###  ¿Qué es el CMSIS? ¿Qué función cumple? ¿Quién lo provee? ¿Qué ventajas aporta?
+
+El CMSIS (Cortex Microcontroller Software Interface Standard) es un estándar desarrollado por ARM Holdings para proporcionar una interfaz coherente y un conjunto de bibliotecas y funciones comunes que simplifican el desarrollo de software para microcontroladores basados en la arquitectura Cortex-M.
+
+Las principales funciones y características del CMSIS son las siguientes:
+
+* Abstracción de Hardware: El CMSIS proporciona una capa de abstracción de hardware que permite a los desarrolladores escribir código que sea independiente del microcontrolador específico. Esto facilita la portabilidad del código entre diferentes microcontroladores Cortex-M de diferentes fabricantes.
+
+* Definición de Núcleo: CMSIS define las funciones y estructuras necesarias para interactuar con el núcleo del procesador, incluyendo la configuración de registros, la administración de interrupciones y el acceso a características específicas del núcleo, como temporizadores y unidades de punto flotante.
+
+* Sistema de Periféricos Universales (Driver): CMSIS también incluye un sistema de periféricos universales (driver) que proporciona una interfaz estándar para los periféricos comunes que se encuentran en los microcontroladores Cortex-M, como UART, SPI, I2C y ADC. Esto permite a los desarrolladores utilizar periféricos sin necesidad de escribir código específico para cada microcontrolador.
+
+* Administración de Interrupciones: CMSIS define una interfaz estándar para configurar y administrar interrupciones, lo que facilita el manejo de interrupciones de manera coherente en diferentes microcontroladores Cortex-M.
+
+* Soporte para Herramientas y Depuración: El CMSIS es compatible con una variedad de herramientas de desarrollo y depuración, lo que simplifica el proceso de desarrollo y depuración de aplicaciones para microcontroladores.
+
+* Optimización de Rendimiento: CMSIS a menudo incluye implementaciones altamente optimizadas de funciones comunes, lo que puede mejorar el rendimiento y la eficiencia del código generado para el microcontrolador.
