@@ -203,3 +203,11 @@ Análogamente al `APCSR`, la FPU cuenta con un registro de status llamado `FPSCR
 En base a todo lo dicho anteriormente, se intuye que al hacerse un cambio de contexto deben guardarse más datos en el stack, haciendo que este procedimiento sea más extenso. Los registros a guardar son los 8 propios del procesador (`r0-r3, r12, lr, xPSR`) más 17 registros de la FPU (`s0-s15, FPSCR`). Sin embago, la arquitectura Cortex-M4F incluye una carácteristica llamada "lazy stacking", la cual hace que el proceso de stacking de estos 25 registros lleve únicamente 12 ciclos de reloj (el mismo número de ciclos que en un Cortex-M3).
 
 ![FPU Stacking](resources/fpu-stacking.png "Registros de la FPU almacenados en una operación de stacking")
+
+### Explique las características avanzadas de atención a interrupciones: tail chaining y late arrival.
+
+* **Tail Chaining:** Ocurre cuando una excepción ocurre mientras el procesador está atendiendo otra excepción de mayor o igual prioridad. En este caso, la nueva excepción quedará en un estado "pending". Una vez atendida la excepción en transcurso, el procesador procederá a atender la excepción pendiente sin necesidad de hacer unstacking/stacking. Esto disminuye considerablemente el tiempo de atención a las ISRs a seis ciclos de reloj (asumiendo que no hayan demoras adicionales).
+![Tail Chaining](resources/tail-chaining.png "Tail Chaining")
+
+* **Late Arrival:** Cuando ocurre una excepción cualquiera, el procesador la acepta y comienza el procedimiento de stacking. Si durante este stacking ocurre otra excepción de mayor prioridad, el procesador continuará haciendo el stacking correspondiente de modo que la última interrupción (más prioritaria) sea atendida primero. Luego de atenderla, resolverá la primera excepción que ocurrió utilizando el mecanismo de Tail Chaining.
+![Late Arrival](resources/late-arrival.png "Late Arrival")
