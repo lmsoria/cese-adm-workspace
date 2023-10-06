@@ -188,3 +188,18 @@ Las principales funciones y características del CMSIS son las siguientes:
 7. Recuperación del Estado Anterior: El microprocesador recupera el estado que se guardó en la pila al comienzo de la interrupción, incluyendo el contenido de los registros y la dirección de retorno. Esto restaura el estado del programa al punto donde se detuvo antes de la interrupción.
 
 8. Reanudación de la Ejecución: Con el estado anterior restaurado, la ejecución del programa principal se reanuda desde donde se detuvo antes de la interrupción.
+
+### ¿Cómo cambia la operación de stacking al utilizar la unidad de punto flotante?
+Al incorporar una unidad de punto flotante, el microcontrolador cuenta con 32 registros adicionales de 32 bits (`Floating Point Register Bank`), denominados `S0 - S30`.
+
+![FPU bank](resources/fpu-bank.png "Banco de registros de punto flotante")
+
+Los primeros 16 registros (de `S0 a S15`) se denominan "caller saved registers". Esto significa que si una funcion `foo()` debe llamar a una funcion `bar()`, el contenido de estos registros debe guardarse (por ejemplo, en el stack) antes de llamar a `bar()`.
+
+Por otro lado, los ultimos 16 registros (de `S16 a S31`) se llaman "callee saved registers". Si una función `foo()` llama a una función `bar()`, y `bar()` necesita usar más de 16 registos para sus cálculos, debe salvar el contenido de estos registros primero, y luego debe restaurar estos registros del stack antes de retornar a `foo()`.
+
+Análogamente al `APCSR`, la FPU cuenta con un registro de status llamado `FPSCR` (Floating Point Status and Control Register) encargado de monitorear el resultado de las operaciones aritmético-lógicas.
+
+En base a todo lo dicho anteriormente, se intuye que al hacerse un cambio de contexto deben guardarse más datos en el stack, haciendo que este procedimiento sea más extenso. Los registros a guardar son los 8 propios del procesador (`r0-r3, r12, lr, xPSR`) más 17 registros de la FPU (`s0-s15, FPSCR`). Sin embago, la arquitectura Cortex-M4F incluye una carácteristica llamada "lazy stacking", la cual hace que el proceso de stacking de estos 25 registros lleve únicamente 12 ciclos de reloj (el mismo número de ciclos que en un Cortex-M3).
+
+![FPU Stacking](resources/fpu-stacking.png "Registros de la FPU almacenados en una operación de stacking")
