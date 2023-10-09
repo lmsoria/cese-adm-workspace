@@ -217,3 +217,13 @@ En base a todo lo dicho anteriormente, se intuye que al hacerse un cambio de con
 El SysTick (System Tick) timer es un contador decremental de 24 bits capaz de sincronizarse con cualquier fuente de clock del microcontrolador.
 
 Cualquier RTOS moderno requiere de una interrupción periódica para ejecutar las tareas correspondientes al kernel/scheduler (por ejemplo cambios de contezto o gestión de tareas). El hecho de tener un timer estándar en todas las arquitecturas permite que un código escrito para un microcontrolador Cortex-M3/4 pueda ser reutilizado en distintos microcontroladores de las mismas arquitecturas.
+
+### ¿Qué funciones cumple la unidad de protección de memoria (MPU)?
+La MPU es un dispositivo programable que permite definir los permisos de acceso a memoria (por ejemplo que sólo accedan tareas con cierto nivel de privilegio o que sea un acceso total) y los atributos de la misma (por ejemplo buffereable o cacheable) para distintas regiones.
+
+Tanto en Cortex-M3 como M4 se pueden programar hasta ocho regiones distintas, cada una con su tamaño, direcciones y configuraciones.
+
+El uso de una MPU puede hacer un sistema embebido más robusto y seguro de la siguiente manera:
+* Previniendo que tareas corrompan el stack utilizado por otras tareas y/o el scheduler.
+* Previniendo que tareas no privilegiadas accedan a ciertos periféricos que pueden considerarse críticos (recordar que por cómo es la arquitectura cada periférico está mapeado en una región de memoria particular).
+* Definiendo espacios de RAM/SRAM como no ejecutables, previniendo asi ataques de inyección de código.
