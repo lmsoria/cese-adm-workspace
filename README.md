@@ -227,3 +227,7 @@ El uso de una MPU puede hacer un sistema embebido más robusto y seguro de la si
 * Previniendo que tareas corrompan el stack utilizado por otras tareas y/o el scheduler.
 * Previniendo que tareas no privilegiadas accedan a ciertos periféricos que pueden considerarse críticos (recordar que por cómo es la arquitectura cada periférico está mapeado en una región de memoria particular).
 * Definiendo espacios de RAM/SRAM como no ejecutables, previniendo asi ataques de inyección de código.
+
+### ¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria no cubiertas por las regiones definidas?
+
+Tal como se mencionó anteriormente, se pueden configurar hasta ocho regiones distintas. Estas regiones pueden solaparse entre sí. Si una dirección de memoria cae entre dos regiones de la MPU, los atributos de acceso a esta dirección será de acuerdo a la región con el número más grande. Por ejemplo, si una dirección esta dentro de un rango definido para una región 2 y 5, se usarán los parámetros de la región 5.
