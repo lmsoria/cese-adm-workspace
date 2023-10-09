@@ -211,3 +211,9 @@ En base a todo lo dicho anteriormente, se intuye que al hacerse un cambio de con
 
 * **Late Arrival:** Cuando ocurre una excepción cualquiera, el procesador la acepta y comienza el procedimiento de stacking. Si durante este stacking ocurre otra excepción de mayor prioridad, el procesador continuará haciendo el stacking correspondiente de modo que la última interrupción (más prioritaria) sea atendida primero. Luego de atenderla, resolverá la primera excepción que ocurrió utilizando el mecanismo de Tail Chaining.
 ![Late Arrival](resources/late-arrival.png "Late Arrival")
+
+### ¿Qué es el systick? ¿Por qué puede afirmarse que su implementación favorece la portabilidad de los sistemas operativos embebidos?
+
+El SysTick (System Tick) timer es un contador decremental de 24 bits capaz de sincronizarse con cualquier fuente de clock del microcontrolador.
+
+Cualquier RTOS moderno requiere de una interrupción periódica para ejecutar las tareas correspondientes al kernel/scheduler (por ejemplo cambios de contezto o gestión de tareas). El hecho de tener un timer estándar en todas las arquitecturas permite que un código escrito para un microcontrolador Cortex-M3/4 pueda ser reutilizado en distintos microcontroladores de las mismas arquitecturas.
