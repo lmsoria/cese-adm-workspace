@@ -231,3 +231,21 @@ El uso de una MPU puede hacer un sistema embebido más robusto y seguro de la si
 ### ¿Cuántas regiones pueden configurarse como máximo? ¿Qué ocurre en caso de haber solapamientos de las regiones? ¿Qué ocurre con las zonas de memoria no cubiertas por las regiones definidas?
 
 Tal como se mencionó anteriormente, se pueden configurar hasta ocho regiones distintas. Estas regiones pueden solaparse entre sí. Si una dirección de memoria cae entre dos regiones de la MPU, los atributos de acceso a esta dirección será de acuerdo a la región con el número más grande. Por ejemplo, si una dirección esta dentro de un rango definido para una región 2 y 5, se usarán los parámetros de la región 5.
+
+### ¿Para qué se suele utilizar la excepción PendSV? ¿Cómo se relaciona su uso con el resto de las excepciones? Dé un ejemplo
+La excepción `PendSV` (Pended Service Call) es otra de las excepciones útiles para brindar soporte de RTOS. A diferencia de la excepción `SVC`, no es precisa, lo que significa que se puede triggerear dentro de la ejecución de una interrupción más prioritaria y su respectivo handler será atendido cuando la ejecución de la interrupción de más priorirad termine.
+
+Esta característica permite organizar llamadas al handler de `PendSV` despues de que todas las tareas más prioritarias concluyan. Esto es muy útil para gestionar cambios de contexto. En la siguiente figura se ejemplifica esto:
+
+![PendSV](resources/pendsv.png "Cambio de Contexto usando PendSV")
+
+1. `Task A` llama a `SVC` para hacer un cambio de tarea (ie, está esperando que otra tarea termine algún trabajo).
+2. El RTOS recibe esta petición, se prepara para el cambio de contexto y "agenda" la excepcion `PendSV`.
+3. Cuando el CPU sale del handler de `SVC`, entra inmediatamente al handler de `PendSV` y hace el cambio de contexto.
+4. Cuando el handler de `PendSV` termina y el CPU vuelve al modo Thread, se ejecuta `Task B`.
+5. Ocurre una interrupcion y se entra al handler de la misma.
+6. Mientras se atiende la interrupción, una excepción de `SYSTICK` ocurre, por lo que se ejecuta su handler (al ser de mayor prioridad).
+7. El RTOS ejecuta el handler de `SYSTICK` y "agenda" nuevamente la excepción `PendSV`.
+8. Cuando se sale de la excepción de `SYSTICK`, se retorna la ejecución de la `ISR`.
+9. Cuando termina la `ISR`, comienza la ejecución del handler de `PendSV` y vuelve a hacer las operaciones de cambio de contexto.
+10. Cuando termina el handler de `PendSV`, el programa vuelve a modo Thread. Esta vez le toca volver a ejecutar la `Task A`.
