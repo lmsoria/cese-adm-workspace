@@ -249,3 +249,10 @@ Esta característica permite organizar llamadas al handler de `PendSV` despues d
 8. Cuando se sale de la excepción de `SYSTICK`, se retorna la ejecución de la `ISR`.
 9. Cuando termina la `ISR`, comienza la ejecución del handler de `PendSV` y vuelve a hacer las operaciones de cambio de contexto.
 10. Cuando termina el handler de `PendSV`, el programa vuelve a modo Thread. Esta vez le toca volver a ejecutar la `Task A`.
+
+### ¿Para qué se suele utilizar la excepción SVC? Expliquelo dentro de un marco de un sistema operativo embebido.
+La excepción `SVC` (Supervisor Call) junto con `PendSV` son importantes para el desarrollo de RTOS. En el caso de `SVC` se trata de una excepción precisa (al contrario que `PendSV`), ya que su respectivo handler se ejecutará inmediatamente después de llamar a la instruccion `svc` (siempre y cuando otra excepción de mayor prioridad ocurra al mismo tiempo).
+
+El mecanismo propuesto por `SVC` se suele usar como una API para permitir que las tareas (no privilegiadas) accedan a recursos del sistema (por ejemplo periféricos). Para ello, las tareas deben primero pedir acceso al RTOS, y éste será quien se lo dará o no. De esta forma, el acceso a recursos está más controlado, dandole una mayor robustez al sistema.
+
+![SVC](resources/svc.png "SVC como un gateway para servicios del OS")
