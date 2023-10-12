@@ -294,3 +294,29 @@ Este documento especifica (entre otras cosas) que cuando se llama a una función
 Si durante la operatoria de la función es necesario usar registros auxiliares, es necesario guardar estos valores en el stack (usando `push`), para posteriormente recuperarlos (usando `pop`) cuando la función retorne. De esta manera se guarda el estado de los registros al momento de llamarse la función.
 
 Si se requieren usar más de cuatro parámetros, entonces es necesario pasarlos por stack.
+
+### ¿Qué es una instrucción SIMD? ¿En qué se aplican y que ventajas reporta su uso? Dé un ejemplo.
+SIMD (*Single Instruction, Multiple Data*) hace referencia a instrucciones que permiten realizar operaciones sobre múltiple datos. Dado que los registros son de 32 bits, puede interpretarse su contenido como
+* Un dato de 32 bits.
+* Dos datos de 16 bits.
+* Cuatro datos de 8 bits.
+De esta forma, en lugar de cargar individualmente datos de 16 bits en diferentes registros para luego operar con ellos, se podría realizar una única carga en un registro y llamar a una instrucción que opere sobre ellos directamente. Por ejemplo, para sumar cuatro números:
+
+```
+// Version sin SIMD
+ldrh r1, #<numero1>
+ldrh r2, #<numero2>
+add r0, r1, r2      // r0 = <numero1> + <numero2>
+ldrh r1, #<numero3>
+ldrh r2, #<numero4>
+add r0, r1, r2      // r0 = <numero1> + <numero2> + <numero3> + <numero4>
+
+...
+
+// Version con SIMD
+ldr r1, <paquete1> // cargo directamente dos valores contiguos [ A1 | A0 ]
+ldr r2, <paquete2> // cargo otros dos valores contiguos [ B1 | B0 ]
+sadd16 r0, r1, r2 // sumo cuatro valores -> r0 = [ (A1+B1) | (A0+B0) ]
+```
+
+Puede notarse que el uso de SIMD minimiza notablemente la cantidad de instrucciones de carga de datos, haciendo que el código resultante se ejecute más rápido. Esto es fundamental en aplicaciones que requieran procesar señales en tiempo real, por ejemplo.
