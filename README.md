@@ -256,3 +256,11 @@ La excepción `SVC` (Supervisor Call) junto con `PendSV` son importantes para el
 El mecanismo propuesto por `SVC` se suele usar como una API para permitir que las tareas (no privilegiadas) accedan a recursos del sistema (por ejemplo periféricos). Para ello, las tareas deben primero pedir acceso al RTOS, y éste será quien se lo dará o no. De esta forma, el acceso a recursos está más controlado, dandole una mayor robustez al sistema.
 
 ![SVC](resources/svc.png "SVC como un gateway para servicios del OS")
+
+
+## ISA
+
+### ¿Qué son los sufijos y para qué se los utiliza? Dé un ejemplo
+Los sufijos son letras (o combinaciones de letras) que se pueden agregar al final de una instrucción para brindar más detalles acerca de qué debería hacer la misma.
+
+![suffixes](resources/suffixes.png "Sufijos disponibles")
