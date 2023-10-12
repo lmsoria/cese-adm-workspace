@@ -272,3 +272,13 @@ Agregar el sufijo `s` a una instrucción le indica que debe actualizar el regist
 adds r0, r1 // Suma r0 + r1 y actualiza el APSR
 add  r0, r1 // Suma r0 + r1, pero no actualiza el APSR
 ```
+
+### ¿Qué utilidad tiene la implementación de instrucciones de aritmética saturada? Dé un ejemplo con operaciones con datos de 8 bits.
+
+Si se está procesando una señal en forma binaria (signada o no, y de una cierta cantidad de bits de resolución), existe la posibilidad de que operaciones numéricas hagan que el resultado final provoque un overflow o un underflow. Por ejemplo, si tengo 8 bits de resolución con signo, el rango de representacion es `[-128, 127]`. Si a 127 (`0b0111 1111`) le sumo uno, el resultado da 128 (`0b1000 0000`), pero como la notación es signada el valor pasa a "valer" -128. Esto genera glitches en las señales a procesar:
+
+![overflow](resources/overflow.png "Overflow en una señal sin saturación")
+
+Al trabajar con operaciones de aritmética saturada, se limita el valor obtenido a las cotas de representación, de modo que la señal tenga una representación más natural:
+
+![saturacion](resources/saturacion.png "Señal saturada")
