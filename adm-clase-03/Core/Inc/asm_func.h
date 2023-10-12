@@ -42,3 +42,5 @@ void asm_invertir(uint16_t* vector, uint32_t longitud);
 void asm_mean(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
 
 void asm_mean_simd(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N);
+
+void asm_echo(int16_t* in, int16_t* out);

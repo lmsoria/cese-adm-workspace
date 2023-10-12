@@ -13,6 +13,7 @@
 .global asm_max
 .global asm_mean
 .global asm_mean_simd
+.global asm_echo
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @ Prototipo en "C":
@@ -284,5 +285,40 @@
     		b loop_mean
 
     	exit_mean_simd:
+    		pop {r4, r5}
+	        bx lr
+
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@ Prototipo en "C":
+@   void void asm_echo(int16_t* in, int16_t* out);
+@
+@ Parametros recibidos:
+@   r0: in
+@   r1: out
+@   r2:
+@   r3:
+@
+.thumb_func
+    asm_echo:
+    	push {r4, r5}
+    	mov r2, 2048
+    	mov r4, 3214 // 4096-882
+
+    	loop_echo_copy:
+    		sub r2, #1
+    		ldr r3, [r0, r2, LSL #2]
+    		str r3, [r1, r2, LSL #2]
+
+    		cbz r2, echo_processing_entry
+    		b loop_echo_copy
+
+    	echo_processing_entry:
+    		mov r2, 0
+    	loop_echo_processing:
+    		sub r4, #1
+    		ldsrh
+
+
+    	exit_echo:
     		pop {r4, r5}
 	        bx lr

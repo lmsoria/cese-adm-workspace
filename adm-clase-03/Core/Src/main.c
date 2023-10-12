@@ -43,6 +43,23 @@ static void downsample_N(int32_t* vector_in, int32_t* vector_out, uint32_t longi
 // 9) Realizar una función que reciba un vector de muestras no signadas de 16 bits e invierta su orden.
 static void invertir (uint16_t* vector, uint32_t longitud);
 
+static void echo(int16_t* in, int16_t* out)
+{
+	// Assumptions:
+	// 1) sizeof(in) = sizeof(out) = 4096
+	// 2) Fs = 44100 Hz
+	// 3) delay = 20 ms (index 882)
+	// 4) gain = 0.5
+
+	for(uint16_t n = 0; n < 4096; n++) {
+		out[n] = in[n];
+	}
+
+	for(uint16_t n = 882; n < 4096; n++) {
+		out[n] += in[n-882] >> 1;
+	}
+}
+
 static void mean(uint16_t* x, uint16_t* y, uint16_t* z, uint16_t N)
 {
 	for(uint16_t n = 0; n < N; n++) {
@@ -187,6 +204,30 @@ int main(void)
     asm_mean_simd(x_asm_simd, y_asm_simd, z_asm_simd, 4);
     cnt_asm = DWT->CYCCNT;
     // ------------------------------------------- //
+
+
+
+    // ------------------- ECHO ------------------ //
+
+    int16_t in_c[4096];
+    int16_t out_c[4096];
+
+    int16_t in_asm[4096];
+    int16_t out_asm[4096];
+
+    for(uint16_t i = 0; i < 4096; i++) {
+    	in_c[i] = 100;
+    	in_asm[i] = 100;
+    }
+
+    DWT->CYCCNT = 0;
+    echo(in_c, out_c);
+    cnt_c = DWT->CYCCNT;
+
+
+    DWT->CYCCNT = 0;
+    asm_echo(in_asm, out_asm);
+    cnt_asm = DWT->CYCCNT;
 
     while (1){}
 }
