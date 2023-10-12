@@ -264,3 +264,11 @@ El mecanismo propuesto por `SVC` se suele usar como una API para permitir que la
 Los sufijos son letras (o combinaciones de letras) que se pueden agregar al final de una instrucción para brindar más detalles acerca de qué debería hacer la misma.
 
 ![suffixes](resources/suffixes.png "Sufijos disponibles")
+
+### ¿Para qué se utiliza el sufijo `s`? Dé un ejemplo
+Agregar el sufijo `s` a una instrucción le indica que debe actualizar el registro `APSR` cuando finalize.
+
+```
+adds r0, r1 // Suma r0 + r1 y actualiza el APSR
+add  r0, r1 // Suma r0 + r1, pero no actualiza el APSR
+```
