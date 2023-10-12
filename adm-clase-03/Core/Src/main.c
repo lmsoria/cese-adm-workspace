@@ -145,19 +145,19 @@ int main(void)
 
 
     // ------------------- MAX ------------------- //
-    int32_t vec_c_max[6] = {0, -54, 50, 3, 45, -4};
-    int32_t vec_asm_max[6] = {0, -54, 50, 3, 45, -4};
-    volatile int32_t max_c;
-    volatile int32_t max_asm;
-
-
-    DWT->CYCCNT = 0;
-    max_c = max(vec_c_max, 6);
-    cnt_c = DWT->CYCCNT;
-
-    DWT->CYCCNT = 0;
-    max_asm = asm_max(vec_asm_max, 6);
-    cnt_c = DWT->CYCCNT;
+//    int32_t vec_c_max[6] = {0, -54, 50, 3, 45, -4};
+//    int32_t vec_asm_max[6] = {0, -54, 50, 3, 45, -4};
+//    volatile int32_t max_c;
+//    volatile int32_t max_asm;
+//
+//
+//    DWT->CYCCNT = 0;
+//    max_c = max(vec_c_max, 6);
+//    cnt_c = DWT->CYCCNT;
+//
+//    DWT->CYCCNT = 0;
+//    max_asm = asm_max(vec_asm_max, 6);
+//    cnt_c = DWT->CYCCNT;
     // ------------------------------------------- //
 
 
@@ -184,7 +184,7 @@ int main(void)
     cnt_asm = DWT->CYCCNT;
 
     DWT->CYCCNT = 0;
-    asm_mean_simd(x_asm, y_asm, z_asm, 4);
+    asm_mean_simd(x_asm_simd, y_asm_simd, z_asm_simd, 4);
     cnt_asm = DWT->CYCCNT;
     // ------------------------------------------- //
 
