@@ -282,3 +282,15 @@ Si se está procesando una señal en forma binaria (signada o no, y de una ciert
 Al trabajar con operaciones de aritmética saturada, se limita el valor obtenido a las cotas de representación, de modo que la señal tenga una representación más natural:
 
 ![saturacion](resources/saturacion.png "Señal saturada")
+
+### Describa brevemente la interfaz entre assembler y C ¿Cómo se reciben los argumentos de las funciones? ¿Cómo se devuelve el resultado? ¿Qué registros deben guardarse en la pila antes de ser modificados?
+
+Hay un documento llamado *Procedure Call Standard for the ARM Architecture*, el cual describe cómo es la convención de llamada a funciones usada por la ABI (*Application Binary Interface*) de ARM.
+
+![PCS](resources/arm-pcs.png "PCS")
+
+Este documento especifica (entre otras cosas) que cuando se llama a una función se utilizan los registro `[r0-r3]` para almacenar los parámetros de entrada. Por otro lado, el valor de retorno de la función estará almacenado en `r0`.
+
+Si durante la operatoria de la función es necesario usar registros auxiliares, es necesario guardar estos valores en el stack (usando `push`), para posteriormente recuperarlos (usando `pop`) cuando la función retorne. De esta manera se guarda el estado de los registros al momento de llamarse la función.
+
+Si se requieren usar más de cuatro parámetros, entonces es necesario pasarlos por stack.
